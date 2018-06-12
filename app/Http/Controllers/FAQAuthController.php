@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-//use Illuminate\Validation\Validator;
 use Illuminate\Support\Facades\Input;
 use Validator;
 use TwigBridge\Facade\Twig;
@@ -25,7 +24,7 @@ class FAQAuthController extends Controller
     {
         $credentials = $request->only('name', 'password');
         $rules = array(
-    'name'  => 'required|max:10',
+    'name'  => 'required|max:60',
     'password' => 'required',
      );
 

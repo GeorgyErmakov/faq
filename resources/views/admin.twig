@@ -42,15 +42,23 @@
 		  {% endfor %}
 	  </ul> <!-- cd-faq-categories -->
     {% endblock main %}
-	
+
+	<section class="cd-faq">
     <div class="cd-faq-items">
+      <p>{{message}}</p>
+    </div>
+  </section>
+
+
+    <div class="cd-faq-items">
+      
       <p>Фильтры: <a href='/admin/nonanswered'>Без ответа</a>/<a href='/admin/nonpublished'>Не опубликованы</a>/<a href='/admin'>Все</a></p>
       {% block one %}
         {% for key, q in quanda %}
           <ul id="{{key}}" class="cd-faq-group">
             <li class="cd-faq-title"><h2>{{key}}</h2></li>
               {% for qu in q %}
-			          <form action="{{ route('changequestion') }}" method="POST">
+			          <form action="{{ route('chadmin') }}" method="POST">
                   <input type="hidden" name="_token" value="{{ csrf_token() }}">
                   <input type="hidden" name="qID" value="{{qu.quid}}">
                   <input type="hidden" name="aID" value="{{qu.aid}}">
@@ -61,14 +69,14 @@
                       <p>Автор вопроса: {{qu.author}}</p>
                       {% if qu.quvisible == 1 %}<p>Статус: опубликовано</p>{% endif %}
                       {% if qu.quvisible == 0 %}<p>Статус: вопрос не опубликован</p>{% endif %}
-					            <p><textarea rows="10" cols="45" name="text" value='' required minlength="5" maxlength="1000">{{qu.answer}}</textarea></p>
-                      <p><input type="submit" name='action' value="Ответить"></p>
+					            <p><textarea rows="10" cols="45" name="text" value='' maxlength="1000">{{qu.answer}}</textarea></p>
+                      <p><input type="submit" name='action' value="Ответить на вопрос"></p>
 					            {% if qu.quvisible == 0 %}
-                      <p><input type="submit" name='action' value="Публиковать"></p>{% endif %}
+                      <p><input type="submit" name='action' value="Публиковать вопрос"></p>{% endif %}
                       {% if qu.quvisible == 1 %}
-                      <p><input type="submit" name='action' value="Убрать из публикации"></p>{% endif %}
-					            <p>{{foo}}<input type="submit" name='action' value="Изменить тему"></p>
-					            <p>{{authors}}<input type="submit" name='action' value="Изменить автора"></p>	
+                      <p><input type="submit" name='action' value="Убрать из публикации вопрос"></p>{% endif %}
+					            <p>{{foo}}<input type="submit" name='action' value="Изменить тему вопроса"></p>
+					            <p>{{authors}}<input type="submit" name='action' value="Изменить автора вопроса"></p>	
                       <p><input type="submit" name='action' value="Удалить вопрос"></p>
 				            </div> <!-- cd-faq-content -->
 			            </li>
@@ -94,15 +102,15 @@
           <th>Действие</th>
         </tr>
         {% for line in subjects %}
-        <tr><form method="GET" action="{{ route('delsubject') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><td><input type="hidden" name="sub_id" value={{line.id}}>{{line.name}}</td>
+        <tr><form method="POST" action="{{ route('chadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><td><input type="hidden" name="sub_id" value={{line.id}}>{{line.name}}</td>
           <td>{{line.count3}}</td>
           <td>{{line.count}}</td>
           <td>{{line.count2}}</td>
-          <td><input type="submit" name="delete" value="Удалить" /></td></form>
+          <td><input type="submit" name="action" value="Удалить тему" /></td></form>
         </tr>
       {% endfor %}
-        <tr><form method="GET" action="{{ route('newsubject') }}"><input type="hidden" name="desc_id" value={{line.id}}><td><input type="text" name="subject" value="" required minlength="3" maxlength="50"></td>
-         <td><input type="submit" name="add" value="Добавить" /></td></form></tr>
+        <tr><form method="POST" action="{{ route('chadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><input type="hidden" name="desc_id" value={{line.id}}><td><input type="text" name="subject" value="" required minlength="3" maxlength="50"></td>
+         <td><input type="submit" name="action" value="Новая тема" /></td></form></tr>
       </table>
     </div>
   </section>
@@ -117,11 +125,11 @@
             <th>Действие</th>
           </tr>
          {% for line in users %}
-          <tr><form method="GET" action="{{route('chadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><td><input type="hidden" name="admin_id" value={{line.id}}>{{line.name}}</td><td><input type="password" name="password" placeholder="password" value="" minlength="6" maxlength="50"></td>
-         <td><input type="submit" name="action" value="Удалить" /><input type="submit" name="action" value="Сменить пароль" /></td></form></tr>
+          <tr><form method="POST" action="{{route('chadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><td><input type="hidden" name="admin_id" value={{line.id}}>{{line.name}}</td><td><input type="password" name="password" placeholder="password" value="" minlength="4" maxlength="50"></td>
+         <td><input type="submit" name="action" value="Удалить администратора" /><input type="submit" name="action" value="Сменить пароль администратора" /></td></form></tr>
       {% endfor %}
-          <tr><form method="get" action="{{ route('newadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><td><input type="text" placeholder="name" name="name" value="" required minlength="3" maxlength="50"></td>
-         <td><input type="password" name="password" required placeholder="password" value="" minlength="6" maxlength="50"></td><td><input type="submit" name="add" value="Добавить" /></td></form></tr>
+          <tr><form method="POST" action="{{ route('chadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><td><input type="text" placeholder="name" name="name" value="" required minlength="3" maxlength="50"></td>
+         <td><input type="password" name="password" required placeholder="password" value="" minlength="6" maxlength="50"></td><td><input type="submit" name="action" value="Добавить администратора" /></td></form></tr>
         </table>
     </div>
   </section>
@@ -130,6 +138,7 @@
   <section class="cd-faq">
     <div class="cd-faq-items">
       <p><a href="/logout">Выйти</a></p><p><a href="/">На главную</a></p>
+      <p>{{message}}</p>
     </div>
   </section>
 

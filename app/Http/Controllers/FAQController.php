@@ -17,8 +17,6 @@ use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-
-
 class FAQController extends Controller
 {
     public function faqList() 
@@ -28,6 +26,7 @@ class FAQController extends Controller
        'authuser' => Auth::id(),
        'quanda' => FAQ::showQ(1,false),
        'authors' => Author::getAuthors(),
+       'message'=> Request::session()->get('message'),
             );
     return Twig::render('index', $params);
     }
@@ -41,10 +40,11 @@ class FAQController extends Controller
             'quanda' => FAQ::showQ($filter, true),
             'authors' => Author::getAuthors(),
             'users' => Users::getUsers(),
+            'message'=> Request::session()->get('message'),
             );
-        return Twig::render('admin', $params);
+      return Twig::render('admin', $params);
         } else {
-	    return redirect()->route('auth');
+	       return redirect()->route('auth');
         }
     }
 
@@ -55,75 +55,65 @@ class FAQController extends Controller
         $qu = Request::input('question');
         $subid = Request::input('subjects_assign');
         $id = Author::addAuthor($auth, $email)->id;
-        FAQ::addQ($qu, $id, $subid);
-        return redirect()->route('user');
-    }
-
-    public function addAdmin() 
-    {
-        $data = Request::input();
-        USERS::addAdmin($data['name'], Hash::make($data['password']));
-        return redirect()->route('admin');
-    }
-
-    public function chAdmin() 
-    {
-        $i = Request::input();
-        $id = Request::input('admin_id');
-        switch ($i['action']) {
-            case 'Удалить':
-                USERS::delAdmin($id);    
-            break;
-            case 'Сменить пароль':
-                USERS::updateAdmin($id, Hash::make($i['password']));       
-            break;
-        
+        $result = FAQ::addQ($qu, $id, $subid);
+        if(isset($result)) {
+            $message = "Вопрос сохранен в системе";
+        } else {
+            $message = "Извините, что-то не так. Попробуйте еще раз";
         }
-        return redirect()->route('admin');
+        return redirect()->route('user')->with(['message'=>$message]);
     }
 
-    public function newSubject() {
-        $input = Request::input();
-        Subject::addSubject($input['subject']);
-        return redirect()->route('admin');
-    }
 
-    public function delSubject() {
-        $id = Request::input('sub_id');
-        FAQ::delSubject($id);
-        return redirect()->route('admin');
-    }
-
-    public function chQ() 
+    public function chAdmin($message = '') 
     {
+          
+        if(count(Request::input())) {
+            $i = Request::input();
+            switch ($i['action']) {
+                case 'Убрать из публикации вопрос':
+                    $result = FAQ::publishQ($i['qID'], false);      
+                break;
+                case 'Публиковать вопрос':
+                    $result = FAQ::publishQ($i['qID'], true);
+                break;
+                case 'Изменить тему вопроса':
+                     $result = FAQ::subjectQ($i['qID'], $i['subjects_assign']);
+                break;
+                case 'Изменить автора вопроса':
+                    $result = FAQ::chAuthorQ($i['qID'],$i['ath_assign']);
+                break;
+                case 'Ответить на вопрос':
+                    $result = FAQ::answerQ($i['qID'], $i['aID'], $i['text']) ;
+                break;
+                case 'Удалить вопрос':
+                    $result = FAQ::delQ($i['qID']);
+                break;
+                case 'Сменить пароль администратора':
+                    $result = USERS::updateAdmin($i['admin_id'], Hash::make($i['password']));
+                break;
+                case 'Удалить администратора':
+                    $id = Request::input('admin_id');
+                    $result = USERS::delAdmin($id);
+                break;
+                case 'Добавить администратора':
+                    $result = USERS::addAdmin($i['name'], Hash::make($i['password']));
+                break;
+                    case 'Новая тема':
+                    $result = Subject::addSubject($i['subject']);
+                break;
+                case 'Удалить тему':
+                    $id = Request::input('sub_id');
+                    $result = FAQ::delSubject($id);
+                break;
+            }
 
-        $i = Request::input();
-        switch ($i['action']) {
-            case 'Убрать из публикации':
-                
-                FAQ::publishQ($i['qID'], false);
-                
-            break;
-            case 'Публиковать':
-                echo "ID".$i['qID'];
-                FAQ::publishQ($i['qID'], true);
-            break;
-            case 'Изменить тему':
-                FAQ::subjectQ($i['qID'], $i['subjects_assign']);
-            break;
-            case 'Изменить автора':
-                FAQ::chAuthorQ($i['qID'],$i['ath_assign']);
-            break;
-            case 'Ответить':
-                FAQ::answerQ($i['qID'], $i['aID'], $i['text']) ;
-            break;
-            case 'Удалить вопрос':
-                FAQ::delQ($i['qID']);
-            break;
+            if(isset($result) && Auth::check()) {
+                AdminLogger::create()->info($i['action'], ['Администратор:'=> Auth::user()->name,]);
+                $message = "Изменения внесены в систему";
+            }
         }
         
-        AdminLogger::create()->info($i['action'], array('Администратор:'=> Auth::user()->name, 'Вопрос:' => $i['qID']));
-        
-        return redirect()->route('admin');
+        return redirect()->route('admin')->with(['message'=>$message]);
     }
 }

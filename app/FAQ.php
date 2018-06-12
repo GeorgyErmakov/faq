@@ -30,7 +30,7 @@ class FAQ extends Question implements iFAQ
     public static function addQ($question, $authid, $subid)
     {  
         try{
-            Question::create(['question' => $question, 'athid' => $authid, 'sid' => $subid, 'vis' => 0]);
+            return Question::create(['question' => $question, 'athid' => $authid, 'sid' => $subid, 'vis' => 0]);
         } catch(\Illuminate\Database\QueryException $ex){ 
             dd($ex->getMessage()); 
         }
@@ -38,7 +38,8 @@ class FAQ extends Question implements iFAQ
 
     public static function delQ($id)
     {
-        Question::destroy($id);
+        return Question::destroy($id);
+
     }
    
     public static function delSubject($id)
@@ -46,6 +47,7 @@ class FAQ extends Question implements iFAQ
         try{
             Question::where("sid", $id)->delete();
             Subject::destroy($id);
+            return true;
         } catch(\Illuminate\Database\QueryException $ex){ 
             dd($ex->getMessage()); 
         }
@@ -57,6 +59,7 @@ class FAQ extends Question implements iFAQ
             $question = Question::find($id);
             $question->sid = $sid;
             $question->save();
+            return true;
         } catch(\Illuminate\Database\QueryException $ex){ 
             dd($ex->getMessage()); 
         }
@@ -68,6 +71,7 @@ class FAQ extends Question implements iFAQ
             $question = Question::find($id);
             $question->athid = $athid;
             $question->save();
+            return true;
         } catch(\Illuminate\Database\QueryException $ex){ 
             dd($ex->getMessage()); 
         }
@@ -85,6 +89,7 @@ class FAQ extends Question implements iFAQ
         }
  
         $question->save();
+        return true;
     }
 
     public static function answerQ($qid, $aid, $txt)
@@ -105,6 +110,7 @@ class FAQ extends Question implements iFAQ
                 $question->save();
                 $aid->save();
             }
+            return true;
         } catch(\Illuminate\Database\QueryException $ex){ 
             dd($ex->getMessage()); 
         }

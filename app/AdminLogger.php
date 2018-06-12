@@ -11,8 +11,7 @@ class AdminLogger extends logger
 {
 
     public static function create() 
-    {
-    	
+    {	
     $obj = new AdminLogger('adm');
     $obj->pushHandler(new StreamHandler('./my_app.log', Logger::INFO));
     $obj->pushHandler(new FirePHPHandler());
