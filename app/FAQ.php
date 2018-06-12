@@ -119,7 +119,7 @@ class FAQ extends Question implements iFAQ
     public static function getSubjectsVisible()
     {
         $res = Question
-            ::selectRaw('subject.id as id, question.vis as visible, question.aid as answered, subject.name as name, count(CASE WHEN question.vis=0 THEN 1 ELSE NULL END) as count, count(CASE WHEN question.aid is Null THEN 1 ELSE NULL END) as count2, count(*) as count3')
+            ::selectRaw('question.id as qid, subject.id as id, question.vis as visible, question.aid as answered, subject.name as name, count(CASE WHEN question.vis=0 THEN 1 ELSE NULL END) as count, count(CASE WHEN question.aid>0 THEN 1 ELSE NULL END) as count2, count(CASE WHEN question.id>0 THEN 1 ELSE NULL END) as count3')
             ->rightjoin('subject', 'question.sid', '=', 'subject.id')
             ->groupBy('name')
             ->get(); 
