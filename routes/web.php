@@ -17,11 +17,11 @@ Route::post('/', 'FAQController@fillQuestion');
 
 
 Route::get('/admin/{filter?}', ['as' => 'admin', 'uses' => 'FAQController@showAllAdmin']);
-Route::any('newadmin', 'FAQController@addAdmin')->name("newadmin");
-Route::get('deladmin', 'FAQController@chAdmin')->name("chadmin");
-Route::any('newsubject', 'FAQController@newSubject')->name("newsubject");
-Route::any('delsubject', 'FAQController@delSubject')->name("delsubject");
-Route::any('changequestion', 'FAQController@chQ')->name("changequestion");
+Route::any('/admin', 'FAQController@chAdmin')->name("chadmin");
+//Route::get('deladmin', 'FAQController@chAdmin')->name("chadmin");
+//Route::any('newsubject', 'FAQController@chAdmin')->name("newsubject");
+//Route::any('delsubject', 'FAQController@chAdmin')->name("delsubject");
+//Route::any('changequestion', 'FAQController@chAdmin')->name("changequestion");
 
 Route::get('/auth/login', 'FAQAuthController@login')->name("auth");
 Route::post('/auth/login', 'FAQAuthController@authenticate')->name("authpost");
