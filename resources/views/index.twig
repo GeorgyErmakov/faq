@@ -1,82 +1,104 @@
-<!doctype html>
-<html lang="en" class="no-js">
-<head>
-
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
-	<link rel="stylesheet" href="css/style.css"> <!-- Resource style -->
-	<script src="js/modernizr.js"></script> <!-- Modernizr -->
-	<title>FAQ</title>
-	
-</head>
+<!DOCTYPE doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+            <meta content="width=device-width, initial-scale=1" name="viewport">
+                <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet" type="text/css">
+                    <link href="css/reset.css" rel="stylesheet">
+                        <!-- CSS reset -->
+                        <link href="css/style.css" rel="stylesheet">
+                            <!-- Resource style -->
+                            <script src="js/modernizr.js">
+                            </script>
+                            <!-- Modernizr -->
+                            <title>
+                                FAQ
+                            </title>
+                        </link>
+                    </link>
+                </link>
+            </meta>
+        </meta>
+    </head>
+</html>
 <body>
-  <header>
-	<h1>FAQ</h1>
-  </header>
-    
+    <header>
+        <h1>
+            FAQ
+        </h1>
+    </header>
     {% set foo %}
-    <label for="subj">Тема</label>
+    <label for="subj">
+        Тема
+    </label>
     <select id="subj" name="subjects_assign">
-      {% for line in subjects %}
-        <option name='idSubject' value={{line.id}}>{{line.name}}</option>
-      {% endfor %}
+        {% for line in subjects %}
+        <option name="idSubject" value="{{line.id}}">
+            {{line.name}}
+        </option>
+        {% endfor %}
     </select>
     {% endset %}
-
-  <section class="cd-faq">
-	<form method="POST">
-	  <input type="hidden" name="_token" value="{{ csrf_token() }}">
-      <input required type="textarea" name="question" placeholder="Вопрос" value="" minlength="5" maxlength="50"/>
-      <input required type="text" name="authname" placeholder="Автор" value="" minlength="2" maxlength="50"/>
-      <input required type="email" name="email" placeholder="email" value="" minlength="3" maxlength="50"/>
-      {{foo}}
-      <input type="submit" value="Задать вопрос" />
-      <p>{{message}}</p>
-    </form>
-  </section> <!-- cd-faq -->
-
-  <section class="cd-faq">
-	{% block cat %}
-	<ul class="cd-faq-categories">
-	  {% for line in subjects %}
-		<li><a href="#{{line.name}}">{{line.name}}</a></li>
-	  {% endfor %}
-	</ul> <!-- cd-faq-categories -->
-    {% endblock cat %}
-	
-
-	<div class="cd-faq-items">
-    {% block items %}
+    <section class="cd-faq">
+        <div class="cd-faq-items">
+            <a href="/ask">
+                Задать вопрос
+            </a>
+            /
+            <a href="/dashboard">
+                Войти в административную панель
+            </a>
+        </div>
+    </section>
+    <!-- cd-faq -->
+    <section class="cd-faq">
+        {% block cat %}
+        <ul class="cd-faq-categories">
+            {% for line in subjects %}
+            <li>
+                <a href="#{{line.name}}">
+                    {{line.name}}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        <!-- cd-faq-categories -->
+        {% endblock cat %}
+        <div class="cd-faq-items">
+            {% block items %}
       {% for key, q in quanda %}
-        <ul id="{{key}}" class="cd-faq-group">
-          <li class="cd-faq-title"><h2>{{key}}</h2></li>
-            {% for qu in q %}			
-			  <li>
-			    <a class="cd-faq-trigger" href="#{{q.subject}}">{{qu.question}}</a>
-			    <div class="cd-faq-content">
-			    	<p>{{qu.answer}}</p>
-				</div> <!-- cd-faq-content -->
-			  </li>
-			{% endfor %}
-		</ul> <!-- cd-faq-group -->
-      {% endfor %}
+            <ul class="cd-faq-group" id="{{key}}">
+                <li class="cd-faq-title">
+                    <h2>
+                        {{key}}
+                    </h2>
+                </li>
+                {% for qu in q %}
+                <li>
+                    <a class="cd-faq-trigger" href="#{{q.subject}}">
+                        {{qu.question}}
+                    </a>
+                    <div class="cd-faq-content">
+                        <p>
+                            {{qu.answer}}
+                        </p>
+                    </div>
+                    <!-- cd-faq-content -->
+                </li>
+                {% endfor %}
+            </ul>
+            <!-- cd-faq-group -->
+            {% endfor %}
     {% endblock items %}
-
-	</div> <!-- cd-faq-items -->
-	
-		
-</section> <!-- cd-faq -->
-
-<section class="cd-faq">
-    <div class="cd-faq-items">
-     <a href="/admin">Войти в административную панель</a>
-    </div>
-  </section>
-<script src="js/jquery-2.1.1.js"></script>
-<script src="js/jquery.mobile.custom.min.js"></script>
-<script src="js/main.js"></script> <!-- Resource jQuery -->
+        </div>
+        <!-- cd-faq-items -->
+    </section>
+    <!-- cd-faq -->
+    <script src="js/jquery-2.1.1.js">
+    </script>
+    <script src="js/jquery.mobile.custom.min.js">
+    </script>
+    <script src="js/main.js">
+    </script>
+    <!-- Resource jQuery -->
 </body>
-</html>

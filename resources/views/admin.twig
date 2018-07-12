@@ -1,149 +1,282 @@
-<!doctype html>
-<html lang="en" class="no-js">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <link href="/assets/img/favicon.ico" rel="icon" type="image/png">
+            <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+            <title>
+                Админ панель
+            </title>
+            <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+            <meta content="width=device-width" name="viewport"/>
+            <!-- Bootstrap core CSS     -->
+            <link href="/assets/css/bootstrap.min.css" rel="stylesheet"/>
+            <!-- Animation library for notifications   -->
+            <link href="/assets/css/animate.min.css" rel="stylesheet"/>
+            <!--  Light Bootstrap Table core CSS    -->
+            <link href="/assets/css/light-bootstrap-dashboard.css?v=1.4.0" rel="stylesheet"/>
+            <!--  CSS for Demo Purpose, don't include it in your project     -->
+            <link href="/assets/css/demo.css" rel="stylesheet"/>
+            <!--     Fonts and icons     -->
+            <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+                <link href="http://fonts.googleapis.com/css?family=Roboto:400,700,300" rel="stylesheet" type="text/css">
+                    <link href="/assets/css/pe-icon-7-stroke.css" rel="stylesheet"/>
+                </link>
+            </link>
+        </link>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="sidebar" data-color="purple" data-image="assets/img/sidebar-5.jpg">
+                <!--
 
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'>
+        Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+        Tip 2: you can also add an image using data-image tag
 
-	<link rel="stylesheet" href="/css/reset.css"> <!-- CSS reset -->
-	<link rel="stylesheet" href="/css/style.css"> <!-- Resource style -->
-	<script src="js/modernizr.js"></script> <!-- Modernizr -->
-	<title>FAQ</title>
-</head>
-<body>
-  <header>
-	 <h1>FAQ</h1>
-  </header>
-  
-  {% set foo %}
-  <label for="subj">Тема</label>
-  <select id="subj" name="subjects_assign">
-    {% for line in subjects %}
-      <option name='idSubject' value={{line.id}}>{{line.name}}</option>
-    {% endfor %}
-  </select>
-  {% endset %}
+    -->
+                <div class="sidebar-wrapper">
+                    <div class="logo">
+                        <a class="simple-text" href="/dashboard">
+                            FAQ
+                        </a>
+                    </div>
+                    <ul class="nav">
+                        <li class="active">
+                            <a href="/dashboard">
+                                <i class="pe-7s-note">
+                                </i>
+                                <p>
+                                    Вопросы/Ответы
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/subjects">
+                                <i class="pe-7s-note2">
+                                </i>
+                                <p>
+                                    Темы
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/users ">
+                                <i class="pe-7s-user">
+                                </i>
+                                <p>
+                                    Пользователи
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="main-panel">
+                <nav class="navbar navbar-default navbar-fixed">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <button class="navbar-toggle" data-target="#navigation-example-2" data-toggle="collapse" type="button">
+                                <span class="sr-only">
+                                    Toggle navigation
+                                </span>
+                                <span class="icon-bar">
+                                </span>
+                                <span class="icon-bar">
+                                </span>
+                                <span class="icon-bar">
+                                </span>
+                            </button>
+                            <a class="navbar-brand" href="#">
+                                Dashboard
+                            </a>
+                        </div>
+                        <div class="collapse navbar-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li>
+                                    <a href="/logout">
+                                        <p>
+                                            Log out
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="separator hidden-lg">
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+                <div class="content">
+                    <div class="container-fluid">
 
-  {% set authors %}
-  <label for="authors">Автор</label>
-  <select id="authors" name="ath_assign">
-    {% for line in authors %}
-      <option name='idAuth' value={{line.id}}>{{line.name}}</option>
-    {% endfor %}
-  </select>
-  {% endset %}
-
-  <section class="cd-faq">
-	  {% block main %}
-	  <ul class="cd-faq-categories">
-		  {% for line in subjects %}
-		<li><a href="#{{line.name}}">{{line.name}} {{line.count}}/{{line.count2}}</a></li>
-		  {% endfor %}
-	  </ul> <!-- cd-faq-categories -->
-    {% endblock main %}
-
-	<section class="cd-faq">
-    <div class="cd-faq-items">
-      <p>{{message}}</p>
-    </div>
-  </section>
-
-
-    <div class="cd-faq-items">
-      
-      <p>Фильтры: <a href='/admin/nonanswered'>Без ответа</a>/<a href='/admin/nonpublished'>Не опубликованы</a>/<a href='/admin'>Все</a></p>
-      {% block one %}
-        {% for key, q in quanda %}
-          <ul id="{{key}}" class="cd-faq-group">
-            <li class="cd-faq-title"><h2>{{key}}</h2></li>
-              {% for qu in q %}
-			          <form action="{{ route('chadmin') }}" method="POST">
-                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                  <input type="hidden" name="qID" value="{{qu.quid}}">
-                  <input type="hidden" name="aID" value="{{qu.aid}}">
-			            <li>
-				            <a class="cd-faq-trigger" href="#{{q.id}}">{{qu.question}}</a>
-				            <div class="cd-faq-content">
-                      <p>Время создания вопроса: {{qu.timeadd}}</p>
-                      <p>Автор вопроса: {{qu.author}}</p>
-                      {% if qu.quvisible == 1 %}<p>Статус: опубликовано</p>{% endif %}
-                      {% if qu.quvisible == 0 %}<p>Статус: вопрос не опубликован</p>{% endif %}
-					            <p><textarea rows="10" cols="45" name="text" value='' maxlength="1000">{{qu.answer}}</textarea></p>
-                      <p><input type="submit" name='action' value="Ответить на вопрос"></p>
-					            {% if qu.quvisible == 0 %}
-                      <p><input type="submit" name='action' value="Публиковать вопрос"></p>{% endif %}
-                      {% if qu.quvisible == 1 %}
-                      <p><input type="submit" name='action' value="Убрать из публикации вопрос"></p>{% endif %}
-					            <p>{{foo}}<input type="submit" name='action' value="Изменить тему вопроса"></p>
-					            <p>{{authors}}<input type="submit" name='action' value="Изменить автора вопроса"></p>	
-                      <p><input type="submit" name='action' value="Удалить вопрос"></p>
-				            </div> <!-- cd-faq-content -->
-			            </li>
-		           </form>
-		          {% endfor %}
-					</ul> <!-- cd-faq-group -->
-        {% endfor %}
-      {% endblock one %}
-
-	  </div> <!-- cd-faq-items -->
-	    <a href="#0" class="cd-close-panel">Close</a>
-  </section> <!-- cd-faq -->
-  
-  <section class="cd-faq">
-    <div class="cd-faq-items">
-      <h2 class="cd-faq-group">Редактирование тем</h2>
-      <table>
-        <tr>
-          <th>Тема</th>
-          <th>Всего</th>
-          <th>Непубликовано</th>
-          <th>Неотвечено</th>
-          <th>Действие</th>
-        </tr>
-        {% for line in subjects %}
-        <tr><form method="POST" action="{{ route('chadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><td><input type="hidden" name="sub_id" value={{line.id}}>{{line.name}}</td>
-          <td>{{line.count3}}</td>
-          <td>{{line.count}}</td>
-          <td>{{line.count3-line.count2}}</td>
-          <td><input type="submit" name="action" value="Удалить тему" /></td></form>
-        </tr>
-      {% endfor %}
-        <tr><form method="POST" action="{{ route('chadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><input type="hidden" name="desc_id" value={{line.id}}><td><input type="text" name="subject" value="" required minlength="3" maxlength="50"></td>
-         <td><input type="submit" name="action" value="Новая тема" /></td></form></tr>
-      </table>
-    </div>
-  </section>
-
-  <section class="cd-faq">
-    <div class="cd-faq-items">
-      <h2 class="cd-faq-group">Редактирование администраторов</h2>
-        <table>
-          <tr>
-            <th>Логин</th>
-            <th>Пароль</th>
-            <th>Действие</th>
-          </tr>
-         {% for line in users %}
-          <tr><form method="POST" action="{{route('chadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><td><input type="hidden" name="admin_id" value={{line.id}}>{{line.name}}</td><td><input type="password" name="password" placeholder="password" value="" minlength="4" maxlength="50"></td>
-         <td><input type="submit" name="action" value="Удалить администратора" /><input type="submit" name="action" value="Сменить пароль администратора" /></td></form></tr>
-      {% endfor %}
-          <tr><form method="POST" action="{{ route('chadmin') }}"><input type="hidden" name="_token" value="{{ csrf_token() }}"><td><input type="text" placeholder="name" name="name" value="" required minlength="3" maxlength="50"></td>
-         <td><input type="password" name="password" required placeholder="password" value="" minlength="6" maxlength="50"></td><td><input type="submit" name="action" value="Добавить администратора" /></td></form></tr>
-        </table>
-    </div>
-  </section>
-
-
-  <section class="cd-faq">
-    <div class="cd-faq-items">
-      <p><a href="/logout">Выйти</a></p><p><a href="/">На главную</a></p>
-
-    </div>
-  </section>
-
-  <script src="js/jquery-2.1.1.js"></script>
-  <script src="js/jquery.mobile.custom.min.js"></script>
-  <script src="js/main.js"></script> <!-- Resource jQuery -->
-</body>
+                    <div class="row">
+                    <div class="col-md-8">
+                                    {% if message != '' %}
+                        <div class="alert alert-info">
+                                    <span>{{message}}</span>
+                                </div>
+                                {% endif %}
+                                </div>
+                                </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card ">
+                                    <div class="header">
+                                        <h4 class="title">
+                                            Вопросы
+                                        </h4>
+                                        <nav class="navbar navbar-default">
+                                            <div class="container-fluid">
+                                                <div class="navbar-header">
+                                                </div>
+                                                <div class="collapse navbar-collapse">
+                                                    <ul class="nav navbar-nav navbar-left">
+                                                    </ul>
+                                                    <ul class="nav navbar-nav navbar-right">
+                                                        <li class="dropdown">
+                                                            <a class="dropdown-toggle" data-toggle="dropdown" href="/">
+                                                                <p>
+                                                                    Фильтр
+                                                                    <b class="caret">
+                                                                    </b>
+                                                                </p>
+                                                            </a>
+                                                            <ul class="dropdown-menu">
+                                                                <li>
+                                                                    <a href="/dashboard/unanswer">
+                                                                        Без ответа
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/dashboard/unpublished">
+                                                                        Неопубликованы
+                                                                    </a>
+                                                                </li>
+                                                                <li class="divider">
+                                                                </li>
+                                                                <li>
+                                                                    <a href="/dashboard">
+                                                                        Все вопросы
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                        <li class="separator hidden-lg hidden-md">
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </nav>
+                                    </div>
+                                    <div class="content">
+                                        <div class="table-full-width">
+                                            <table class="table">
+                                                <tbody>
+                                                    <thead>
+                                                        <th>
+                                                            Вопрос
+                                                        </th>
+                                                        <th>
+                                                            Дата создания
+                                                        </th>
+                                                        <th>
+                                                            Статус
+                                                        </th>
+                                                        <th>
+                                                            Ответ
+                                                        </th>
+                                                        <th>
+                                                            Тема
+                                                        </th>
+                                                        <th>
+                                                            Действия
+                                                        </th>
+                                                    </thead>
+                                                    {% for qu in quanda %}
+                                                    <tr>
+                                                        <form method="POST">
+                                                            <input name="_token" type="hidden" value="{{ csrf_token() }}">
+                                                                <input name="question_id" type="hidden" value="{{qu.quid}}">
+                                                                    <td>
+                                                                        {{qu.question}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{qu.timeadd}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {% if qu.quvisible == 1 %}
+                                                                        <p>
+                                                                            опубликовано
+                                                                        </p>
+                                                                        {% endif %}
+                                                                {% if qu.quvisible == 0 %}
+                                                                        <p>
+                                                                            вопрос не опубликован
+                                                                        </p>
+                                                                        {% endif %}
+                                                                    </td>
+                                                                    <td>
+                                                                        {% if qu.answer != '' %}
+                                                                        <p>
+                                                                            отвечен
+                                                                        </p>
+                                                                        {% endif %}
+                                                                        {% if qu.answer == '' %}
+                                                                        <p>
+                                                                            без ответа
+                                                                        </p>
+                                                                        {% endif %}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{qu.subject}}
+                                                                    </td>
+                                                                    <td class="td-actions text-left">
+                                                                        <button class="btn btn-info btn-simple btn-xs" formaction="/question" rel="tooltip" title="Edit" type="submit">
+                                                                            <i class="fa fa-edit">
+                                                                            </i>
+                                                                        </button>
+                                                                        <button class="btn btn-danger btn-simple btn-xs" formaction="{{ route('delquestion')}}" rel="tooltip" title="Remove" type="submit">
+                                                                            <i class="fa fa-times">
+                                                                            </i>
+                                                                        </button>
+                                                                    </td>
+                                                                </input>
+                                                            </input>
+                                                        </form>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <footer class="footer">
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </body>
+    <!--   Core JS Files   -->
+    <script src="/assets/js/jquery.3.2.1.min.js" type="text/javascript">
+    </script>
+    <script src="/assets/js/bootstrap.min.js" type="text/javascript">
+    </script>
+    <!--  Charts Plugin -->
+    <script src="/assets/js/chartist.min.js">
+    </script>
+    <!--  Notifications Plugin    -->
+    <script src="/assets/js/bootstrap-notify.js">
+    </script>
+    <!--  Google Maps Plugin    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE" type="text/javascript">
+    </script>
+    <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
+    <script src="/assets/js/light-bootstrap-dashboard.js?v=1.4.0">
+    </script>
+    <!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
+    <script src="/assets/js/demo.js">
+    </script>
 </html>

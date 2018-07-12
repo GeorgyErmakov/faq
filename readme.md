@@ -6,6 +6,6 @@
 <li>копировать и переименовать .env.example в .env</li>
 <li>php artisan key:generate</li>
 <li>Создать базу данных из дампа diplom.sql</li>
-<li>Доступ к клиентской части http://localhost, к административной http://localhost/admin</li>
+<li>Доступ к клиентской части http://localhost, к административной http://localhost/dashboard</li>
 <li>Администратор: admin\admin</li>
 </ul>
