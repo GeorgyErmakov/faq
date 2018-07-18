@@ -6,25 +6,29 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
 {
-	protected $table = 'subject';
-	protected $fillable = ['name'];
-
+    protected $table    = 'subject';
+    protected $fillable = ['name'];
 
     public function question()
     {
-        return $this->hasMany('App\Question');
+        return $this->hasMany('App\Question', 'sid');
     }
 
     public static function getSubjects()
     {
         return Subject::all();
- 
+
+    }
+
+    public static function getNonEmptySubjects()
+    {
+
+        return Subject::has('Question')->get();
     }
 
     public static function addSubject($name)
     {
-        Subject::create(['name' => $name]);
+        return Subject::create(['name' => $name]);
     }
 
- 
 }

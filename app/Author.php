@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Author extends Model
 {
-	protected $table = 'author';
-	protected $fillable = ['name', 'email'];
-
+    protected $table    = 'author';
+    protected $fillable = ['name', 'email'];
 
     public function question()
     {
@@ -24,6 +23,5 @@ class Author extends Model
     {
         return Author::create(['name' => $name, 'email' => $email]);
     }
-
 
 }

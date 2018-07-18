@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Answer extends Model
 {
-	protected $table = 'answer';
-	protected $fillable = ['text'];
+    protected $table    = 'answer';
+    protected $fillable = ['text'];
 
     public function question()
     {
@@ -16,7 +16,7 @@ class Answer extends Model
 
     public static function addAnswer($text)
     {
-        return $this->create(['text' => $text]);
+        return Answer::create(['text' => $text]);
     }
 
 }
