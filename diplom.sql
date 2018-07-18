@@ -5,9 +5,6 @@ SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
-CREATE DATABASE `diplom_a` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci */;
-USE `diplom_a`;
-
 DROP TABLE IF EXISTS `answer`;
 CREATE TABLE `answer` (
   `id` int(11) NOT NULL auto_increment,
